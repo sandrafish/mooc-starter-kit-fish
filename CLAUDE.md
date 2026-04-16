@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 <!--
   Starter context file from Advanced Prompt Engineering for Journalists
   Course site: https://mooc.amditis.tech
@@ -9,29 +11,68 @@
   the better Claude's output will be. Delete these comments when you're done.
 -->
 
+## About this repo
+
+This is a journalism course workspace for the Knight Center MOOC "Advanced Prompt Engineering for Journalists." It contains:
+
+- `CLAUDE.md` — this context file, read by Claude at the start of every session
+- `sample-docs/` — press releases, meeting minutes, interview notes for exercises
+- `skills/` — custom skill files invoked with `/skill-name` in the Claude Code prompt
+- `scripts/` — shell scripts that pipe documents through `claude -p` for batch processing
+- `mcp-configs/` — MCP server configuration examples (copy to `~/.claude/mcp.json` to activate)
+- `beat-archive/` — your document archive for the Module 4 RAG exercise
+
+## Skills
+
+Skills in `skills/` are Markdown files that act as reusable prompt templates. Invoke them by typing `/` followed by the filename (without `.md`) — for example, `/newsroom-style` or `/my-first-skill`.
+
+To create a new skill:
+
+```bash
+cp skills/my-first-skill.md skills/your-skill-name.md
+# edit the copy, then invoke with /your-skill-name
+```
+
+## Scripts
+
+Scripts use `claude -p` (non-interactive, single-prompt mode):
+
+```bash
+# Summarize a single article
+./scripts/summarize-article.sh sample-docs/sample-article.html
+
+# Batch-process multiple files
+./scripts/batch-process.sh sample-docs/
+```
+
+Make scripts executable if needed: `chmod +x scripts/*.sh`
+
+## MCP configuration
+
+To connect Claude to local files, copy and edit the example config:
+
+```bash
+cp mcp-configs/filesystem-example.json ~/.claude/mcp.json
+# Replace YOUR_USERNAME and the path, then restart Claude Code
+```
+
+---
+
 ## Beat
 
-<!-- Replace this with your beat description. Be specific: what do you cover,
-     for which publication, and who are the key people and institutions?
-     The more detail you give, the better Claude understands your context.
+fish is an independent data journalist (kinda retired) focused on mostly Colorado politics. she uses Jupyter Lab with Python/Pandas to process and analyze data, excel to analyze and summarize data, Postgresql for large datasets (voter data) and SQLite for quick tables and Datasette.
 
-     Example of a filled-in beat section:
+i'll be working on [this site](https://followingthemoneyco.com/) during the election year to provide journalists and the public with state-level campaign finance data that's more easily useable than the Secretary of State's site. that's part of some volunteer work i'm doing with Colorado News Collaborative to help journalists in the state with their election coverage.
 
-     I cover city government for the Springfield Daily News. My primary focus
-     is the city council, the mayor's office, and the annual budget process.
+And i'm encouraging news organization to use [QuizTheVote](https://www.quizthevote.com/), an open-source, no-coding quiz platform that matches voters with candidates based on public policy, not political party or persona.
 
-     Key people and institutions:
-     - Mayor Janet Torres, elected 2024, first-term Democrat
-     - Council President Ray Alvarez, chairs the finance committee
-     - Springfield Board of Education, 9 elected members
-     - City Manager Diane Chen, appointed 2023, manages day-to-day operations
--->
-
-I cover [your beat] for [your publication].
 
 Key people and institutions:
-- [Name, title, relevant context]
-- [Name, title, relevant context]
+- [Federal Election Commission, federal campaign finance](https://www.fec.gov/data/elections/?cycle=2026&state=CO)
+- [Colorado Secretary of State TRACER, state level campaign finance](https://tracer.sos.colorado.gov/PublicSite/homepage.aspx)
+- [Colorado SOS Election page, general information](https://www.coloradosos.gov/pubs/elections/main.html)
+- [Ballot measure information, information on ballot measures](https://www.coloradosos.gov/pubs/elections/Initiatives/InitiativesHome.html)
+
 
 ## Style
 
@@ -40,9 +81,9 @@ Key people and institutions:
 - Spell out numbers under 10
 - Dollar amounts: $2.3 million, not $2,300,000
 
-<!-- Add your publication's house style rules here. The more specific, the better.
+<!-- Add your publication's house style rules here.
 
-     Examples of house style rules you might add:
+     Examples:
      - Use "council member," not "councilman/councilwoman"
      - Refer to the governor by last name on second reference, never first name
      - Always include party affiliation and district on first reference for legislators
@@ -67,38 +108,44 @@ Key people and institutions:
 ## Terminology
 
 <!-- Add beat-specific terms that Claude should use correctly.
-     Getting terminology right prevents embarrassing errors in your copy.
 
      Examples:
      - The annual budget process is called the "appropriations cycle" — never
        call it "budget season"
      - The state legislature is the "General Assembly," not "state congress"
      - A "resolution" is non-binding; an "ordinance" has the force of law
-     - "Arraignment" and "indictment" are not interchangeable — an arraignment
-       is a court appearance; an indictment is a formal charge by a grand jury
 -->
+- Prioritize in campaign finance reports:
+  - Total raised, specifying the reporting time frame at least once
+  - Total spent
+  - Cash on hand at the end of the reporting period, such as "at the end of March"
+- When using the term "dark money" or "dark money groups" also say that such groups "are typically nonprofits that don't disclose their donors."
+- For more definitions, refer to [MoneyInPolitics](https://moneyinpolitics.wtf/)
+- The Colorado Secretary of State oversees elections broadly
+- Each county clerk oversees elections in their county. A list of those county clerks[is here](https://static1.squarespace.com/static/6259a2140535307f29d7bcb4/t/69c89094b8a8c109b6adc23c/1774751892564/CountyClerkRosterWebsite.pdf)
+
 
 ## Avoid
 
-<!-- Add patterns you don't want in your output. This section is where you
-     train Claude away from its worst habits. Be specific.
+<!-- Add patterns you don't want in your output.
 
      Examples:
      - Don't use "slammed" or "blasted" for political disagreements — use
        "criticized," "objected to," or "voted against"
-     - Avoid "comprehensive," "leveraging," and "seamlessly" — these are
-       filler words that add no meaning
+     - Avoid "comprehensive," "leveraging," and "seamlessly"
      - Don't write "officials say" without naming the official
-     - Never use "breaking" or "just in" — that's for live coverage, not drafts
      - Avoid passive voice for attribution: write "the mayor said," not
        "it was said by the mayor"
 -->
+- Use "raised" but not "hauled in" or "raked in"
+- Don't use "slammed" or "blasted" for political disagreements — use
+       "criticized," "objected to," or "voted against"
+
 
 ## Lessons learned
 
 <!-- Add rules here when the AI makes a mistake or misinterprets an instruction.
-     These accumulate over time and prevent repeated errors. Every time Claude
-     gets something wrong, add a short rule so it doesn't happen again.
+     These accumulate over time and prevent repeated errors.
 
      Examples:
      - "Claude kept writing 'the Board of Education' when our district calls
